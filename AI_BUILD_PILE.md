@@ -305,12 +305,87 @@ class RobertoBot:
 
 ---
 
+## Constructor Thinking (Sequential Memory)
+
+Boten bygger upp resonemang steg för steg, som en constructor.
+
+### Flöde
+```
+Input → Decompose → Build Steps → Chain → Output
+```
+
+| Steg | Funktion |
+|------|----------|
+| **Decompose** | Bryt ner problemet i delar |
+| **Build** | Konstruera lösning bit för bit |
+| **Chain** | Länka stegen logiskt |
+| **Memory** | Spara kontext mellan steg |
+
+### Implementation
+```python
+class ConstructorThinking:
+    def __init__(self):
+        self.steps = []
+        self.memory = {}
+
+    def decompose(self, problem):
+        # Bryt ner i sub-problems
+        return self._call_llm(f"Bryt ner detta problem i steg: {problem}")
+
+    def build_step(self, step, context):
+        # Bygg ett steg med kontext från tidigare
+        self.memory[step] = context
+        return self._call_llm(f"Lös steg: {step}\nKontext: {context}")
+
+    def chain(self, steps):
+        result = ""
+        for i, step in enumerate(steps):
+            context = result if result else "Start"
+            result = self.build_step(step, context)
+            self.steps.append({"step": step, "result": result})
+        return result
+
+    def think(self, problem):
+        # Full constructor flow
+        sub_problems = self.decompose(problem)
+        return self.chain(sub_problems)
+```
+
+### Med LangChain
+```python
+from langchain.chains import SequentialChain
+from langchain.prompts import PromptTemplate
+
+# Steg 1: Analysera
+analyze = LLMChain(
+    llm=llm,
+    prompt=PromptTemplate(template="Analysera: {input}")
+)
+
+# Steg 2: Planera
+plan = LLMChain(
+    llm=llm,
+    prompt=PromptTemplate(template="Planera baserat på: {analysis}")
+)
+
+# Steg 3: Implementera
+implement = LLMChain(
+    llm=llm,
+    prompt=PromptTemplate(template="Implementera: {plan}")
+)
+
+# Chain ihop
+chain = SequentialChain(chains=[analyze, plan, implement])
+```
+
+---
+
 ## TODO: Roberto Docs
 
 - [x] Three Apes koncept - Tor-lager
 - [x] Bot modes - Zen + Master
+- [x] Constructor Thinking - sequential memory
 - [ ] Burnouts logik - implementera
-- [ ] Memory sequential thinking - bygga
 - [ ] AOSP/GrapheneOS integration
 - [ ] App framework setup
 
