@@ -267,9 +267,48 @@ All bot-kommunikation går genom Tor-kretsen.
 
 ---
 
+## Bot Modes
+
+Clean coding machine med olika lägen:
+
+| Mode | Beteende |
+|------|----------|
+| **Zen Mode** | Minimal output, fokuserad, ren kod, inga onödiga kommentarer |
+| **Master Mode** | Full kraft, djup analys, optimering, expert-nivå |
+
+### Implementation
+```python
+class RobertoBot:
+    def __init__(self):
+        self.mode = "zen"
+        self.memory = []
+
+    def set_mode(self, mode):
+        self.mode = mode
+
+    def respond(self, query):
+        if self.mode == "zen":
+            return self._zen_response(query)
+        elif self.mode == "master":
+            return self._master_response(query)
+
+    def _zen_response(self, query):
+        # Kort, ren, fokuserad
+        system = "Du är en minimalistisk kodare. Ge ren kod utan förklaringar."
+        return self._call_llm(system, query)
+
+    def _master_response(self, query):
+        # Djup, analytisk, expert
+        system = "Du är en expert-kodare. Analysera djupt, optimera, förklara trade-offs."
+        return self._call_llm(system, query)
+```
+
+---
+
 ## TODO: Roberto Docs
 
 - [x] Three Apes koncept - Tor-lager
+- [x] Bot modes - Zen + Master
 - [ ] Burnouts logik - implementera
 - [ ] Memory sequential thinking - bygga
 - [ ] AOSP/GrapheneOS integration
