@@ -416,6 +416,52 @@ chain = SequentialChain(chains=[analyze, plan, implement])
 
 ---
 
+## Offline Mode
+
+Helt lokal, ingen internet.
+
+### Stack
+| Komponent | Funktion |
+|-----------|----------|
+| **Ollama** | Lokal LLM (codellama/llama3) |
+| **ChromaDB** | Vektor-minne på disk |
+| **SQLite** | Session/config |
+
+### Setup
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+ollama pull codellama
+```
+
+### Implementation
+```python
+import ollama
+import chromadb
+
+class RobertoOffline:
+    def __init__(self):
+        self.llm = "codellama"
+        self.db = chromadb.PersistentClient(path="./memory")
+        self.collection = self.db.get_or_create_collection("mem")
+
+    def _call_llm(self, system, query):
+        return ollama.chat(
+            model=self.llm,
+            messages=[
+                {"role": "system", "content": system},
+                {"role": "user", "content": query}
+            ]
+        )["message"]["content"]
+
+    def store(self, text):
+        self.collection.add(documents=[text], ids=[str(hash(text))])
+
+    def recall(self, query, n=3):
+        return self.collection.query(query_texts=[query], n_results=n)["documents"]
+```
+
+---
+
 ## Claude Code Tools (Tillgängliga)
 
 | Verktyg | Funktion | Användning |
