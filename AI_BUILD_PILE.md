@@ -416,6 +416,42 @@ chain = SequentialChain(chains=[analyze, plan, implement])
 
 ---
 
+## Claude Code Tools (Tillgängliga)
+
+| Verktyg | Funktion | Användning |
+|---------|----------|------------|
+| **Bash** | Kör kommandon | git, npm, builds, system |
+| **Read** | Läs filer | Kod, config, bilder, PDF |
+| **Write** | Skapa filer | Ny kod, config |
+| **Edit** | Redigera filer | Ändra befintlig kod |
+| **Glob** | Hitta filer | `**/*.py`, `src/**/*.ts` |
+| **Grep** | Sök innehåll | Regex i kodbas |
+| **WebFetch** | Hämta webbsidor | Dokumentation, API docs |
+| **WebSearch** | Söka internet | Research, lösningar |
+| **Task** | Sub-agenter | Explore, Plan, Bash agents |
+| **TodoWrite** | Spåra tasks | Progress tracking |
+| **NotebookEdit** | Jupyter | .ipynb redigering |
+
+### Sub-agenter (Task tool)
+
+| Agent | Specialitet |
+|-------|-------------|
+| **Explore** | Snabb kodbas-utforskning |
+| **Plan** | Arkitektur, implementation strategy |
+| **Bash** | Komplexa shell-operationer |
+| **general-purpose** | Multi-step research |
+
+### Parallell Execution
+
+```python
+# Kan köra flera verktyg samtidigt:
+# - Parallella sökningar
+# - Flera filer samtidigt
+# - Background tasks
+```
+
+---
+
 ## TODO: Roberto Docs
 
 - [x] Three Apes koncept - Tor-lager
