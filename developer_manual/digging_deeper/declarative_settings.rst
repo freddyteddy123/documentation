@@ -9,8 +9,8 @@ Declarative settings
 .. versionadded:: 29.0.0
 
 With Nextcloud 29 there is a new way to define app settings in a declarative way.
-This means that you can just register your settings schema 
-without writing a custom settings handling front-end and back-end code 
+This means that you can just register your settings schema
+without writing a custom settings handling front-end and back-end code
 (except when more complex settings logic or design is required).
 
 Registering settings schema
@@ -177,7 +177,7 @@ Internal (``storage_type='internal'``) storage type is handled by core, you don'
 Section type admin
 ******************
 
-For declarative settings schema with ``section_type`` set to ``DeclarativeSettingsTypes::SECTION_TYPE_ADMIN`` - settings values 
+For declarative settings schema with ``section_type`` set to ``DeclarativeSettingsTypes::SECTION_TYPE_ADMIN`` - settings values
 are stored in ``appconfig`` table.
 
 Accessible via ``OCP\IConfig->getAppValue`` interface.
@@ -185,7 +185,7 @@ Accessible via ``OCP\IConfig->getAppValue`` interface.
 Section type personal
 *********************
 
-For declarative settings schema with ``section_type`` set to ``DeclarativeSettingsTypes::SECTION_TYPE_PERSONAL`` - settings values 
+For declarative settings schema with ``section_type`` set to ``DeclarativeSettingsTypes::SECTION_TYPE_PERSONAL`` - settings values
 are user specific and stored in ``preferences`` table.
 
 Accessible via ``OCP\IConfig->getUserValue`` interface.

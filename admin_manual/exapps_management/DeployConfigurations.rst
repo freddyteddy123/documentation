@@ -129,7 +129,7 @@ A setup with the HaRP container itself on the remote is not supported.
 
 3. The FRP generated client certificates should be present in the ``certs`` folder locally. Copy the files ``client.crt``, ``client.key`` and ``ca.crt`` inside the ``certs`` folder to the remote host.
 4. Create a folder structure on the remote host: ``mkdir -p certs/frp`` and copy the files ``client.crt``, ``client.key`` and ``ca.crt`` to the ``certs/frp`` folder.
-5. Create a new file ``frpc.toml`` with the following contents. 
+5. Create a new file ``frpc.toml`` with the following contents.
 
 	.. code-block:: toml
 

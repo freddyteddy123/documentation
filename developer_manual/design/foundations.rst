@@ -15,7 +15,7 @@ Primary color
 ^^^^^^^^^^^^^
 
 .. figure:: ../images/colour-primary.svg
-	 	
+
 		#0082C9
 
 While this is the primary color associated with Nextcloud and can be used to draw attention to an element, it is best to limit the usage of this to primary actions and other important elements.
@@ -30,7 +30,7 @@ While this is the primary color associated with Nextcloud and can be used to dra
 
 Background color
 ^^^^^^^^^^^^^^^^
-		
+
 .. list-table::
 
     * - .. figure:: ../images/colour-main-background.svg

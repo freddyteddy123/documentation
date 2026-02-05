@@ -71,7 +71,7 @@ because substantial editing efforts can better be controlled on your local PC.
 
 .. tip::
    If you're getting to know our documentation syntax, `give Documatt Snippets
-   <https://snippets.documatt.com/>`_ a try. This online editor is a great way 
+   <https://snippets.documatt.com/>`_ a try. This online editor is a great way
    to practice with reStructuredText and Sphinx, and it provides a more accurate
    preview of your work than GitHub does.
 

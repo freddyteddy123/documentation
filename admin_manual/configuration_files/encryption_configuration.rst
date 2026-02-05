@@ -2,81 +2,81 @@
 Server-side encryption configuration
 ====================================
 
-The primary purpose of the Nextcloud server-side encryption is to protect users' 
-files on remote storage, such as Dropbox and Google Drive, and to do it easily 
+The primary purpose of the Nextcloud server-side encryption is to protect users'
+files on remote storage, such as Dropbox and Google Drive, and to do it easily
 and seamlessly from within Nextcloud.
 
-Server-side encryption separates encryption of local and remote storage. 
-This allows you to encrypt remote storage, such as Dropbox and 
-Google, without having to also encrypt your home storage on your Nextcloud 
-server (en- or disable the checkbox "enabling encryption on your home 
+Server-side encryption separates encryption of local and remote storage.
+This allows you to encrypt remote storage, such as Dropbox and
+Google, without having to also encrypt your home storage on your Nextcloud
+server (en- or disable the checkbox "enabling encryption on your home
 storage" in the **Server-side encryption** section of your Admin page.)
 
 .. note:: Nextcloud supports Authenticated Encryption for all
-   newly encrypted files. See https://hackerone.com/reports/108082 for more 
+   newly encrypted files. See https://hackerone.com/reports/108082 for more
    technical information about the impact.
-   
-   For maximum security make sure to configure external storage with "Check for 
-   changes: Never". This will let Nextcloud ignore new files not added via Nextcloud, 
-   so a malicious external storage administrator could not add new files to the 
-   storage without your knowledge. Of course, this is not wise if your external 
+
+   For maximum security make sure to configure external storage with "Check for
+   changes: Never". This will let Nextcloud ignore new files not added via Nextcloud,
+   so a malicious external storage administrator could not add new files to the
+   storage without your knowledge. Of course, this is not wise if your external
    storage is subject to legitimate external changes.
 
-Nextcloud server-side encryption encrypts files stored on the Nextcloud server, 
-and files on remote storage that is connected to your Nextcloud server. 
-Encryption and decryption are performed on the Nextcloud server. All files sent 
-to remote storage will be encrypted by the Nextcloud server, and upon retrieval, 
+Nextcloud server-side encryption encrypts files stored on the Nextcloud server,
+and files on remote storage that is connected to your Nextcloud server.
+Encryption and decryption are performed on the Nextcloud server. All files sent
+to remote storage will be encrypted by the Nextcloud server, and upon retrieval,
 decrypted before serving them to you and anyone you have shared them with.
 
 .. note:: Encryption files generate a slight overhead in size by ~1% (35% before Nextcloud 25).
    User's quotas are based on the unencrypted file size, and not the encrypted file size.
 
-When files on external storage are encrypted in Nextcloud, you cannot share them 
-directly from the external storage services, but only through Nextcloud sharing 
+When files on external storage are encrypted in Nextcloud, you cannot share them
+directly from the external storage services, but only through Nextcloud sharing
 because the key to decrypt the data never leaves the Nextcloud server.
 
-Nextcloud's server-side encryption generates a strong encryption key, which is 
-unlocked by user's passwords. Your users don't need to track an extra 
-password, but simply log in as they normally do. It encrypts only the contents 
+Nextcloud's server-side encryption generates a strong encryption key, which is
+unlocked by user's passwords. Your users don't need to track an extra
+password, but simply log in as they normally do. It encrypts only the contents
 of files, and not filenames and directory structures.
 
-You should regularly backup all encryption keys to prevent permanent data loss. 
+You should regularly backup all encryption keys to prevent permanent data loss.
 The encryption keys are stored in the following directories:
 
-``data/<user>/files_encryption`` 
+``data/<user>/files_encryption``
   Users' private keys and all other keys necessary to decrypt the users' files
 ``data/files_encryption``
   private keys and all other keys necessary to decrypt the files stored on a
   system wide external storage
-  
-When encryption is enabled, all files are encrypted and decrypted by the 
+
+When encryption is enabled, all files are encrypted and decrypted by the
 Nextcloud application, and stored encrypted on your remote storage.
-This protects your data on externally hosted storage. The Nextcloud 
-admin and the storage admin will see only encrypted files when browsing backend 
-storage.  
-  
+This protects your data on externally hosted storage. The Nextcloud
+admin and the storage admin will see only encrypted files when browsing backend
+storage.
+
 .. warning:: Encryption keys are stored only on the Nextcloud server, eliminating
-   exposure of your data to third-party storage providers. The encryption app 
+   exposure of your data to third-party storage providers. The encryption app
    does **not** protect your data if your Nextcloud server is compromised, and it
-   does not prevent Nextcloud administrators from reading user's files. This 
-   would require client-side encryption, which this app does not provide. If 
-   your Nextcloud server is not connected to any external storage services then 
-   it is better to use other encryption tools, such as file-level or 
-   whole-disk encryption. 
-   
-   Note also that SSL terminates at or before Apache on the Nextcloud server, and 
-   all files will exist in an unencrypted state between the SSL connection 
-   termination and the Nextcloud code that encrypts and decrypts files. This is 
-   also potentially exploitable by anyone with administrator access to your 
-   server. Read `How Nextcloud uses encryption to protect your data 
+   does not prevent Nextcloud administrators from reading user's files. This
+   would require client-side encryption, which this app does not provide. If
+   your Nextcloud server is not connected to any external storage services then
+   it is better to use other encryption tools, such as file-level or
+   whole-disk encryption.
+
+   Note also that SSL terminates at or before Apache on the Nextcloud server, and
+   all files will exist in an unencrypted state between the SSL connection
+   termination and the Nextcloud code that encrypts and decrypts files. This is
+   also potentially exploitable by anyone with administrator access to your
+   server. Read `How Nextcloud uses encryption to protect your data
    <https://nextcloud.com/blog/encryption-in-nextcloud/>`_ for more information.
-   
+
 Before enabling encryption
 --------------------------
 
-Plan very carefully before enabling encryption because it is not reversible via 
-the Nextcloud Web interface. If you lose your encryption keys your files are not 
-recoverable. Always have backups of your encryption keys stored in a safe 
+Plan very carefully before enabling encryption because it is not reversible via
+the Nextcloud Web interface. If you lose your encryption keys your files are not
+recoverable. Always have backups of your encryption keys stored in a safe
 location, and consider enabling all recovery options.
 
 There are two encryption mode, `master key` and `user keys`. By default, `master key` is used.
@@ -93,30 +93,30 @@ You have more options via the ``occ`` command (see :ref:`occ_encryption_label`).
 Enabling encryption
 -------------------
 
-Nextcloud encryption consists of two parts. The base encryption system is 
-enabled and disabled on your Admin page. First you must enable this, and then 
-select an encryption module to load. Currently the only available encryption 
+Nextcloud encryption consists of two parts. The base encryption system is
+enabled and disabled on your Admin page. First you must enable this, and then
+select an encryption module to load. Currently the only available encryption
 module is the Nextcloud Default Encryption Module.
 
-First go to the **Server-side encryption** section of your Admin page and check 
+First go to the **Server-side encryption** section of your Admin page and check
 **Enable server-side encryption**. You have one last chance to change your mind.
 
 .. figure:: images/encryption3.png
 
-After clicking the **Enable Encryption** button you see the message "No 
-encryption module loaded, please load a encryption module in the app menu", so 
+After clicking the **Enable Encryption** button you see the message "No
+encryption module loaded, please load a encryption module in the app menu", so
 go to your Apps page to enable the Nextcloud Default Encryption Module.
 
 .. figure:: images/encryption1.png
 
-Return to your Admin page to see the Nextcloud Default Encryption 
-Module added to the module selector, and automatically selected. Now you must 
+Return to your Admin page to see the Nextcloud Default Encryption
+Module added to the module selector, and automatically selected. Now you must
 log out and then log back in to initialize your encryption keys.
 
 .. figure:: images/encryption14.png
 
-When you log back in, there is a checkbox for enabling encryption on your home 
-storage. This is checked by default. Un-check to avoid encrypting your home 
+When you log back in, there is a checkbox for enabling encryption on your home
+storage. This is checked by default. Un-check to avoid encrypting your home
 storage.
 
 .. figure:: images/encryption15.png
@@ -244,7 +244,7 @@ Fix key not found errors::
 Disabling encryption
 --------------------
 
-You may disable encryption only with ``occ``. Make sure you have backups of all 
+You may disable encryption only with ``occ``. Make sure you have backups of all
 encryption keys, including users'.
 Disable your encryption module with this command::
 
@@ -264,10 +264,10 @@ once the problems that caused the abortion have been resolved.
 Files not encrypted
 -------------------
 
-Only the data in the files in ``data/user/files`` are encrypted, and not the 
+Only the data in the files in ``data/user/files`` are encrypted, and not the
 filenames or folder structures. These files are never encrypted:
 
-- Existing files in the trash bin & Versions. Only new and changed files after 
+- Existing files in the trash bin & Versions. Only new and changed files after
   encryption is enabled are encrypted.
 - Existing files in Versions
 - Image thumbnails from the Gallery app
@@ -275,7 +275,7 @@ filenames or folder structures. These files are never encrypted:
 - The search index from the full text search app
 - Third-party app data
 
-There may be other files that are not encrypted; only files that are exposed to 
+There may be other files that are not encrypted; only files that are exposed to
 third-party storage providers are guaranteed to be encrypted.
 
 
@@ -352,7 +352,7 @@ Invalid private key for encryption app
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This `issue <https://github.com/nextcloud/server/issues/8546>`_ is being worked
-on. In the meantime there is a 
+on. In the meantime there is a
 `workaround <https://github.com/nextcloud/server/issues/8546#issuecomment-514139714>`_
 which unfortunately is only suitable for administrators comfortable with the
 command line.

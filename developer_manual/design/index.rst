@@ -2,7 +2,7 @@
 Interface & interaction design
 ==============================
 
-.. toctree:: 
+.. toctree::
 	:maxdepth: 2
 
 	introduction

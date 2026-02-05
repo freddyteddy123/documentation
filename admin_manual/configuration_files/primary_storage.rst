@@ -16,26 +16,26 @@ Differences from External Storage
 ---------------------------------
 
 When  an object store is used as Primary Storage, Nextcloud requires exclusive access
-over the bucket being used. All metadata (filenames, directory structures, etc) 
-is stored in Nextcloud and not in the object store. The metadata is only stored in the database and the 
+over the bucket being used. All metadata (filenames, directory structures, etc)
+is stored in Nextcloud and not in the object store. The metadata is only stored in the database and the
 object store only holds the file content by unique identifier.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~
 Performance Implications
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Because of this, object stores configured as Primary Storage usually perform better than 
-when using the same object store via the External Storage support application, but the downside 
-is being unable to access the files from outside of Nextcloud. This makes using an object store 
+Because of this, object stores configured as Primary Storage usually perform better than
+when using the same object store via the External Storage support application, but the downside
+is being unable to access the files from outside of Nextcloud. This makes using an object store
 as Primary Storage distinct from using an object store via External Storage.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Data Backup and Recovery Implications
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-One impact of using an object store as Primary Storage is that your data backup strategy 
-needs to incorporate this. **Your data is longer stored on your Nextcloud server, but your 
-files are also no longer accessible by simply bypassing your Nextcloud server and accessing 
+One impact of using an object store as Primary Storage is that your data backup strategy
+needs to incorporate this. **Your data is longer stored on your Nextcloud server, but your
+files are also no longer accessible by simply bypassing your Nextcloud server and accessing
 your object store directly.**
 
 -------------
@@ -170,11 +170,11 @@ Minimum required parameters are:
 * :code:`key`
 * :code:`secret`
 
-.. note:: You will *probably* need to specify additional parameters beyond these, unless the default 
-          values (see below) exactly match your situation. In particular, your :code:`region` (if Amazon 
+.. note:: You will *probably* need to specify additional parameters beyond these, unless the default
+          values (see below) exactly match your situation. In particular, your :code:`region` (if Amazon
 	  hosted) or :code:`hostname` (if non-Amazon hosted).
 
-Optional parameters most commonly needing adjustment (and their defaults values if left 
+Optional parameters most commonly needing adjustment (and their defaults values if left
 unconfigured):
 
 * :code:`region` defaults to :code:`eu-west-1`
@@ -204,16 +204,16 @@ Optional parameters less commonly needing adjustment:
 * :code:`version` defaults to :code:`latest`
 * :code:`verify_bucket_exists` defaults to :code:`true` [Note: Setting this to :code:`false` *after* confirming the bucket has been created may provide a performance benefit, but may not be possible in multibucket scenarios.]
 
-**If you are using Amazon S3:** the :code:`region` parameter is required unless you're happy with 
-the default of :code:`eu-west-1`. There is no need to override the :code:`hostname` or :code:`port`. 
-And :code:`storageClass` only needs to be modified if you're using a different configuration at AWS. 
-Lastly, :code:`use_path_style` is rarely required with Amazon, but some legacy Amazon datacenters 
+**If you are using Amazon S3:** the :code:`region` parameter is required unless you're happy with
+the default of :code:`eu-west-1`. There is no need to override the :code:`hostname` or :code:`port`.
+And :code:`storageClass` only needs to be modified if you're using a different configuration at AWS.
+Lastly, :code:`use_path_style` is rarely required with Amazon, but some legacy Amazon datacenters
 may require it.
 
-**If you using a non-Amazon hosted S3 store:** you will need to set the :code:`hostname` 
-parameter (and can ignore the :code:`region` parameter). You may need to use :code:`use_path_style` 
+**If you using a non-Amazon hosted S3 store:** you will need to set the :code:`hostname`
+parameter (and can ignore the :code:`region` parameter). You may need to use :code:`use_path_style`
 if your non-Amazon S3 store does *not* support requests like :code:`https://bucket.hostname.domain/`.
-Setting :code:`use_path_style` to true configures the S3 client to make requests like 
+Setting :code:`use_path_style` to true configures the S3 client to make requests like
 :code:`https://hostname.domain/bucket` instead.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~

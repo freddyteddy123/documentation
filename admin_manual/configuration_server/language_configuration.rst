@@ -10,7 +10,7 @@ If this does not work properly or you want to make sure that Nextcloud always
 starts with a given language, you can set a **default_language** parameter in the
 :file:`config/config.php`.
 
-.. note:: The default_language parameter is only used, when the browser does not 
+.. note:: The default_language parameter is only used, when the browser does not
    send any language, and the user hasn't configured own language preferences.
 
 ::
@@ -43,7 +43,7 @@ The locale is used to define how dates and other formats are displayed. Nextclou
 should automatically pick an appropriate locale based on your current language.
 Users can modify their locale inside their settings panel.
 If that does not work properly or if you want to make sure that Nextcloud always
-starts with a given locale, you can set a **default_locale** parameter in the 
+starts with a given locale, you can set a **default_locale** parameter in the
 :file:`config/config.php`.
 
 .. note:: The default_locale parameter is only used when the user hasn't configured

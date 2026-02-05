@@ -2,14 +2,14 @@
 Command Line Client
 ===================
 
-The Nextcloud Client packages contain a command line client, ``nextcloudcmd``, that can 
+The Nextcloud Client packages contain a command line client, ``nextcloudcmd``, that can
 be used to synchronize Nextcloud files to client machines.
 
-``nextcloudcmd`` performs a single *sync run* and then exits the synchronization 
-process. In this manner, ``nextcloudcmd`` processes the differences between 
-client and server directories and propagates the files to bring both 
-repositories to the same state. Contrary to the GUI-based client, 
-``nextcloudcmd`` does not repeat synchronizations on its own. It also does not 
+``nextcloudcmd`` performs a single *sync run* and then exits the synchronization
+process. In this manner, ``nextcloudcmd`` processes the differences between
+client and server directories and propagates the files to bring both
+repositories to the same state. Contrary to the GUI-based client,
+``nextcloudcmd`` does not repeat synchronizations on its own. It also does not
 monitor for file system changes.
 
 
@@ -46,7 +46,7 @@ Refer to the link
 - https://help.nextcloud.com/t/linux-packages-status/10216
 
 
-To invoke ``nextcloudcmd``, you must provide the local and the remote repository 
+To invoke ``nextcloudcmd``, you must provide the local and the remote repository
 URL using the following command::
 
   nextcloudcmd [OPTIONS...] sourcedir nextcloudurl
@@ -96,7 +96,7 @@ Other command line switches supported by ``nextcloudcmd`` include the following:
 Credential Handling
 ~~~~~~~~~~~~~~~~~~~
 
-``nextcloudcmd`` requires the user to specify the username and password using the standard URL pattern, e.g., 
+``nextcloudcmd`` requires the user to specify the username and password using the standard URL pattern, e.g.,
 
 ::
 
@@ -121,7 +121,7 @@ installed along with ``nextcloudcmd`` and thus be available in a system location
 be placed next to the binary as ``sync-exclude.lst`` or be explicitly specified
 with the ``--exclude`` switch.
 
-The required file content is one exclude item per line where wildcards are allowed, e.g.: 
+The required file content is one exclude item per line where wildcards are allowed, e.g.:
 ::
 
     ~*.tmp

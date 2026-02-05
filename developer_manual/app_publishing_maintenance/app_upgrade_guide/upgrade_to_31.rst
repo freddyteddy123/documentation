@@ -141,7 +141,7 @@ Changed APIs
   - ``DATETIME_TZ`` for fields that will (de)serialized as ``\DateTime`` instances with both the time part set and with timezone information.
   - ``DATETIME_TZ_IMMUTABLE`` for fields that will (de)serialized as ``\DateTimeImmutable`` instances with both the time part set and with timezone information.
 
-- It's now possible to paginate DAV requests with new headers. 
+- It's now possible to paginate DAV requests with new headers.
 
   - First request should contains the following headers:
 

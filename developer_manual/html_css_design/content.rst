@@ -57,5 +57,5 @@ Rules and information
 * Do not use ``#content-wrapper`` anymore
 * If your app is injecting itself by replacing the #content element, make sure to keep the ``#content`` id
 * If you use the ``app-content-list`` standard, the ``app-content-details`` div will be hidden in mobile mode (full screen).
-  You will need to add the ``showdetails`` class to the ``app-content-list`` to show the main content. 
+  You will need to add the ``showdetails`` class to the ``app-content-list`` to show the main content.
   On mobile view, the whole list/details section (depending on which is shown) will scroll the body
