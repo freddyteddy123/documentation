@@ -1,5 +1,40 @@
 # AI Build Pile - Roberto Docs
 
+## The Crew (Codenames)
+
+Roberto's personligheter och komponenter:
+
+| Codename | Roll | Vibe |
+|----------|------|------|
+| **Fred Flinta** | Heavy lifter | Brute force, får jobbet gjort, "YABBA DABBA DOO" |
+| **Betty Boop** | Smooth operator | Elegant, charming, hanterar API:er med stil |
+| **Rock'n'Roll** | Speed daemon | Snabb execution, parallell processing, full gas |
+| **Bambam** | Destroyer | Cleanup, cache clear, garbage collection |
+| **Wilma** | Organizer | File structure, config management, ordning |
+| **Barney** | Helper | Utility functions, sidekick operations |
+
+### Användning
+```python
+class Roberto:
+    def __init__(self):
+        self.fred = HeavyLifter()      # Tunga operationer
+        self.betty = APIHandler()       # Smidiga API-calls
+        self.rock = ParallelRunner()    # Snabb execution
+        self.bambam = Cleaner()         # Städa upp
+        self.wilma = FileManager()      # Organisera
+        self.barney = Utils()           # Hjälpfunktioner
+
+    def yabba_dabba_doo(self, task):
+        """Fred tar hand om tunga lyft"""
+        return self.fred.lift(task)
+
+    def boop_boop_be_doop(self, api):
+        """Betty fixar API:er med charm"""
+        return self.betty.call(api)
+```
+
+---
+
 ## The Threes (3x Better Philosophy)
 
 Allt är tre. Tre lager. Tre gånger bättre.
