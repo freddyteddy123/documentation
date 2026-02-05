@@ -1,0 +1,211 @@
+# AI Build Pile - Roberto Docs
+
+## Smart Bot Toolkit
+
+### Ramverk
+| Verktyg | Användning |
+|---------|------------|
+| PyTorch | Flexibelt, research & custom models |
+| TensorFlow/Keras | Produktion, enklare syntax |
+| Hugging Face Transformers | LLMs, NLP, färdiga modeller |
+| LangChain | LLM-applikationer, RAG, agents |
+
+### Installation
+```bash
+# Grundläggande
+pip install torch transformers datasets accelerate
+pip install langchain openai chromadb
+
+# Fine-tuning
+pip install peft trl bitsandbytes
+
+# Lokalt LLM
+curl -fsSL https://ollama.com/install.sh | sh
+ollama pull llama3
+```
+
+---
+
+## Smart Bot Kod
+
+### OpenAI/Claude API
+```python
+from openai import OpenAI
+
+client = OpenAI(api_key="din-nyckel")
+
+def bot(fråga):
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": "Du är en hjälpsam assistent."},
+            {"role": "user", "content": fråga}
+        ]
+    )
+    return response.choices[0].message.content
+```
+
+### Lokalt med Ollama
+```python
+import ollama
+
+def bot(fråga):
+    response = ollama.chat(model="llama3", messages=[
+        {"role": "user", "content": fråga}
+    ])
+    return response["message"]["content"]
+```
+
+### Med Minne (Konversation)
+```python
+historik = []
+
+def bot(fråga):
+    historik.append({"role": "user", "content": fråga})
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=historik
+    )
+    svar = response.choices[0].message.content
+    historik.append({"role": "assistant", "content": svar})
+    return svar
+```
+
+### Anthropic Claude
+```python
+from anthropic import Anthropic
+
+client = Anthropic(api_key="...")
+response = client.messages.create(
+    model="claude-sonnet-4-20250514",
+    messages=[{"role": "user", "content": "Hej!"}]
+)
+```
+
+---
+
+## Sequential Thinking / Memory System
+
+### Vektor-databaser (RAG)
+| DB | Bäst för |
+|----|----------|
+| ChromaDB | Snabb prototyping, lokalt |
+| Pinecone | Produktion, managed |
+| Weaviate | Hybrid search |
+| FAISS | Stort dataset, snabbt |
+
+### RAG Pipeline
+```python
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.vectorstores import Chroma
+from langchain.chains import RetrievalQA
+from langchain.llms import OpenAI
+
+# Ladda dokument
+embeddings = OpenAIEmbeddings()
+vectorstore = Chroma.from_documents(documents, embeddings)
+
+# Sök + svara
+qa = RetrievalQA.from_chain_type(
+    llm=OpenAI(),
+    retriever=vectorstore.as_retriever()
+)
+svar = qa.run("Din fråga här")
+```
+
+### Sequential Thinking Agent
+```python
+from langchain.agents import initialize_agent, Tool
+from langchain.memory import ConversationBufferMemory
+
+memory = ConversationBufferMemory(memory_key="chat_history")
+
+tools = [
+    Tool(name="Search", func=search_func, description="Sök information"),
+    Tool(name="Calculate", func=calc_func, description="Räkna ut saker"),
+]
+
+agent = initialize_agent(
+    tools,
+    llm,
+    agent="conversational-react-description",
+    memory=memory
+)
+```
+
+---
+
+## Fine-tuning (LoRA)
+```python
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from peft import LoraConfig, get_peft_model
+
+model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-v0.1")
+tokenizer = AutoTokenizer.from_pretrained("mistralai/Mistral-7B-v0.1")
+
+lora_config = LoraConfig(
+    r=16,
+    lora_alpha=32,
+    target_modules=["q_proj", "v_proj"]
+)
+model = get_peft_model(model, lora_config)
+```
+
+---
+
+## Verktyg
+- **Ollama** - Kör LLMs lokalt
+- **LM Studio** - GUI för lokala modeller
+- **vLLM** - Snabb inference server
+- **Weights & Biases** - Experiment tracking
+- **Label Studio** - Data labeling
+
+---
+
+## AOSP / GrapheneOS Build
+
+### Setup
+```bash
+# Repo tool
+mkdir ~/bin
+curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+chmod a+x ~/bin/repo
+
+# Hämta AOSP
+repo init -u https://android.googlesource.com/platform/manifest
+repo sync -j8
+
+# GrapheneOS
+repo init -u https://github.com/GrapheneOS/platform_manifest.git -b 14
+repo sync -j8
+```
+
+### Build
+```bash
+source build/envsetup.sh
+lunch aosp_arm64-userdebug
+m -j$(nproc)
+```
+
+---
+
+## Uppgiftsfördelning
+
+| Agent | Ansvar |
+|-------|--------|
+| **Cline** | Setup, API-integration, endpoints |
+| **Sixth** | Modell, system prompt, testning |
+
+---
+
+## TODO: Roberto Docs
+
+- [ ] Three Apes koncept - definiera
+- [ ] Burnouts logik - implementera
+- [ ] Memory sequential thinking - bygga
+- [ ] AOSP/GrapheneOS integration
+- [ ] App framework setup
+
+---
+
+*Genererad för Roberto Docs projekt*
