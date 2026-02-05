@@ -1,5 +1,36 @@
 # AI Build Pile - Roberto Docs
 
+## The Threes (3x Better Philosophy)
+
+Allt är tre. Tre lager. Tre gånger bättre.
+
+| Namn | Funktion | Tre komponenter |
+|------|----------|-----------------|
+| **Three Apes** | Privacy/VPN | See → Think → Act |
+| **Three Zens** | Code modes | Minimal → Fokus → Ren |
+| **Three Turtles** | Persistence | Session → Working → Long-term |
+| **Three Moons** | Sync cycles | Local → Cloud → Backup |
+| **Three Rockets** | Deployment | Dev → Stage → Prod |
+| **Three Burnouts** | Error handling | Retry → Fallback → Fail safe |
+| **Three Bananas** | Rewards/Progress | Start → Progress → Complete |
+
+### Filosofi
+```
+┌─────────────────────────────────────┐
+│         EVERYTHING 3x BETTER        │
+├─────────────────────────────────────┤
+│  1 lager = svagt                    │
+│  2 lager = ok                       │
+│  3 lager = ROBUST                   │
+├─────────────────────────────────────┤
+│  Entry → Process → Exit             │
+│  Input → Think → Output             │
+│  Try → Retry → Recover              │
+└─────────────────────────────────────┘
+```
+
+---
+
 ## Smart Bot Toolkit
 
 ### Ramverk
