@@ -43,7 +43,7 @@ Allt är tre. Tre lager. Tre gånger bättre.
 |------|----------|-----------------|
 | **Three Apes** | Privacy/VPN | See → Think → Act |
 | **Three Zens** | Code modes | Minimal → Fokus → Ren |
-| **Three Turtles** | Persistence | Session → Working → Long-term |
+| **Three Ninja Turtles** | Persistence | Leo → Donnie → Raph |
 | **Three Moons** | Sync cycles | Local → Cloud → Backup |
 | **Three Rockets** | Deployment | Dev → Stage → Prod |
 | **Three Burnouts** | Error handling | Retry → Fallback → Fail safe |
@@ -490,6 +490,64 @@ class ThreeApes:
 ```
 
 All bot-kommunikation går genom Tor-kretsen + memory chain.
+
+---
+
+## Three Ninja Turtles (Persistence Layer)
+
+**COWABUNGA!** Minnes-hantering med ninja-precision.
+
+| Turtle | Vapen | Roll | Minne |
+|--------|-------|------|-------|
+| 🐢 **Leo** (Leonardo) | Katana | Leader, koordinerar | Session memory - snabba beslut |
+| 🐢 **Donnie** (Donatello) | Bo staff | Tech genius, processar | Working memory - analys |
+| 🐢 **Raph** (Raphael) | Sai | Enforcer, persisterar | Long-term memory - permanent |
+
+### Pipeline
+```
+┌─────────────────────────────────────────────┐
+│         THREE NINJA TURTLES                 │
+├─────────────────────────────────────────────┤
+│  LEO: "I'll lead this!"                     │
+│  - Tar emot request                         │
+│  - Session context                          │
+│  - Snabb routing                            │
+├─────────────────────────────────────────────┤
+│  DONNIE: "I got the tech!"                  │
+│  - Analyserar data                          │
+│  - Working memory                           │
+│  - Smart processing                         │
+├─────────────────────────────────────────────┤
+│  RAPH: "Let's finish this!"                 │
+│  - Sparar permanent                         │
+│  - Vector store                             │
+│  - Encrypted storage                        │
+└─────────────────────────────────────────────┘
+```
+
+### Implementation
+```python
+class ThreeNinjaTurtles:
+    def __init__(self):
+        self.leo = SessionMemory()      # Snabb, kortvarig
+        self.donnie = WorkingMemory()   # Analys, temp
+        self.raph = PersistentMemory()  # Permanent, encrypted
+
+    def cowabunga(self, data):
+        """Full ninja pipeline"""
+        led = self.leo.lead(data)           # Session
+        processed = self.donnie.process(led) # Working
+        stored = self.raph.persist(processed) # Long-term
+        return stored
+
+    def recall(self, query):
+        """Hämta från rätt turtle"""
+        if self.leo.has(query):
+            return self.leo.get(query)
+        elif self.donnie.has(query):
+            return self.donnie.get(query)
+        return self.raph.get(query)
+```
 
 ---
 
