@@ -339,6 +339,85 @@ User → [Ape1:VPN] → [Ape2:Tor] → [Ape3:Exit] → Internet
                               Clean response
 ```
 
+### Monitoring Mode (Watchdog)
+```
+┌─────────────────────────────────────────────┐
+│           THREE APES MONITOR                │
+├─────────────────────────────────────────────┤
+│  APE 1: SEE (Watcher)                       │
+│  - Övervakar filer, repos, endpoints        │
+│  - Detekterar ändringar                     │
+│  - Triggar på events                        │
+├─────────────────────────────────────────────┤
+│  APE 2: THINK (Analyzer)                    │
+│  - Analyserar vad som ändrats              │
+│  - Klassificerar: critical/warning/info     │
+│  - Bestämmer action                         │
+├─────────────────────────────────────────────┤
+│  APE 3: ACT (Responder)                     │
+│  - Kör automatiska fixes                    │
+│  - Skickar alerts                           │
+│  - Loggar till persistent storage           │
+└─────────────────────────────────────────────┘
+```
+
+### Monitor Implementation
+```python
+import time
+import hashlib
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+
+class ThreeApesMonitor:
+    def __init__(self):
+        self.see = ApeWatcher()
+        self.think = ApeAnalyzer()
+        self.act = ApeResponder()
+
+    def watch(self, paths):
+        """Starta övervakning"""
+        observer = Observer()
+        for path in paths:
+            observer.schedule(self.see, path, recursive=True)
+        observer.start()
+        return observer
+
+class ApeWatcher(FileSystemEventHandler):
+    """APE 1: Detektera ändringar"""
+    def on_modified(self, event):
+        return {"type": "modified", "path": event.src_path}
+
+    def on_created(self, event):
+        return {"type": "created", "path": event.src_path}
+
+class ApeAnalyzer:
+    """APE 2: Analysera och klassificera"""
+    def analyze(self, event):
+        if ".env" in event["path"]:
+            return {"level": "critical", "action": "alert"}
+        elif ".py" in event["path"]:
+            return {"level": "info", "action": "test"}
+        return {"level": "debug", "action": "log"}
+
+class ApeResponder:
+    """APE 3: Agera på ändringar"""
+    def respond(self, analysis):
+        if analysis["action"] == "alert":
+            self.send_alert(analysis)
+        elif analysis["action"] == "test":
+            self.run_tests()
+        self.log(analysis)
+```
+
+### Vad den övervakar
+| Target | Trigger | Action |
+|--------|---------|--------|
+| **Filer** | Ändring/skapade | Test, lint, alert |
+| **Git repos** | Push/commit | CI/CD trigger |
+| **API endpoints** | Status ändring | Alert, failover |
+| **Logs** | Error patterns | Alert, auto-fix |
+| **System** | Resource usage | Scale, alert |
+
 ### Implementation
 ```python
 class ThreeApes:
