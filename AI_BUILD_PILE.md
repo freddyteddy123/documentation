@@ -882,6 +882,84 @@ class RobertoOffline:
 
 ---
 
+## The Store (Lidl Style)
+
+**Billigt. Snabbt. Ingen bs.** Komponent-butik för Roberto.
+
+```
+┌─────────────────────────────────────────────┐
+│            🛒 ROBERTO LIDL                  │
+│         "Less is More. More is Less."       │
+├─────────────────────────────────────────────┤
+│  AISLE 1: Tools         │  AISLE 2: Models │
+│  - Ollama       FREE    │  - llama3   FREE │
+│  - ChromaDB     FREE    │  - codellama FREE│
+│  - SQLite       FREE    │  - mistral  FREE │
+├─────────────────────────────────────────────┤
+│  AISLE 3: APIs          │  AISLE 4: Utils  │
+│  - OpenAI      $$       │  - watchdog FREE │
+│  - Claude      $$       │  - rclone   FREE │
+│  - Groq        FREE*    │  - tor      FREE │
+├─────────────────────────────────────────────┤
+│  CHECKOUT: pip install -r requirements.txt  │
+└─────────────────────────────────────────────┘
+```
+
+### Shopping List (requirements.txt)
+```txt
+# Core - Always Free
+ollama
+chromadb
+sqlite3
+
+# LLM APIs - Pick one
+openai          # $$$
+anthropic       # $$$
+groq            # Free tier
+
+# Utils - All Free
+watchdog
+python-dotenv
+httpx[socks]
+requests
+
+# Optional
+langchain
+transformers
+```
+
+### Budget Tiers
+
+| Tier | Kostnad | Vad du får |
+|------|---------|------------|
+| 🟢 **Lidl** | 0 kr | Ollama + lokala modeller |
+| 🟡 **ICA** | ~100 kr/mån | Groq free + lite OpenAI |
+| 🔴 **Hemköp** | ~500 kr/mån | Full Claude/GPT-4 access |
+
+### Quick Checkout
+```bash
+# Lidl setup (FREE)
+pip install ollama chromadb watchdog python-dotenv
+ollama pull codellama
+
+# Done. Roberto is ready.
+```
+
+### Filosofi
+```
+┌─────────────────────────────────────┐
+│         LIDL PHILOSOPHY             │
+├─────────────────────────────────────┤
+│  ✓ Köp bara det du behöver          │
+│  ✓ Gratis först, betala sen         │
+│  ✓ Ingen fancy förpackning          │
+│  ✓ Funkar? Ship it.                 │
+│  ✓ KISS - Keep It Simple Stupid     │
+└─────────────────────────────────────┘
+```
+
+---
+
 ## TODO: Roberto Docs
 
 - [x] Three Apes koncept - Tor-lager
