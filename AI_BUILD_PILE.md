@@ -416,6 +416,55 @@ chain = SequentialChain(chains=[analyze, plan, implement])
 
 ---
 
+## Ultimate Setup (Linux Mint)
+
+```
+┌────────────────────────────────────────────┐
+│              LINUX MINT                    │
+├────────────────────────────────────────────┤
+│  RAM: ~90% → Ollama/LLM                    │
+│  - Större modell = bättre output           │
+│  - codellama:34b eller llama3:70b          │
+│  - GPU offload om tillgängligt             │
+├────────────────────────────────────────────┤
+│  CPU: Constructor Thinking pipeline        │
+│  SSD: ChromaDB vektor-minne                │
+├────────────────────────────────────────────┤
+│           ↓ OUTPUT ↓                       │
+│  Cloud sync (Nextcloud/rsync)              │
+│  - Kod → repo                              │
+│  - Resultat → cloud storage                │
+└────────────────────────────────────────────┘
+```
+
+### Config
+```bash
+# /etc/systemd/system/ollama.service.d/override.conf
+[Service]
+Environment="OLLAMA_MAX_LOADED_MODELS=1"
+Environment="OLLAMA_NUM_PARALLEL=1"
+Environment="OLLAMA_MAX_QUEUE=1"
+
+# Ge Ollama max RAM
+sudo sysctl vm.swappiness=10
+```
+
+### Cloud Output
+```python
+import subprocess
+
+def sync_to_cloud(local_path, remote_path):
+    # Nextcloud via rclone
+    subprocess.run(["rclone", "sync", local_path, f"nextcloud:{remote_path}"])
+
+def push_to_repo(path, msg):
+    subprocess.run(["git", "-C", path, "add", "."])
+    subprocess.run(["git", "-C", path, "commit", "-m", msg])
+    subprocess.run(["git", "-C", path, "push"])
+```
+
+---
+
 ## Offline Mode
 
 Helt lokal, ingen internet.
