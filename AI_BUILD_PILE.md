@@ -465,6 +465,93 @@ def push_to_repo(path, msg):
 
 ---
 
+## Security (Online Mode)
+
+När Roberto jobbar på internet.
+
+### Three Apes VPN Layer
+```
+┌─────────────────────────────┐
+│  Ape 1: Entry (VPN in)      │
+│     ↓                       │
+│  Ape 2: Tor relay           │
+│     ↓                       │
+│  Ape 3: Exit (clean out)    │
+└─────────────────────────────┘
+```
+
+### Security Stack
+```
+┌─────────────────────────────┐
+│  1. VPN (first hop)         │
+│  2. Tor (anonymitet)        │
+│  3. TLS/SSL (kryptering)    │
+│  4. Input sanitering        │
+│  5. Rate limiting           │
+│  6. Ingen loggning          │
+└─────────────────────────────┘
+```
+
+### Implementation
+```python
+import os
+import hashlib
+from functools import lru_cache
+
+class RobertoSecure:
+    def __init__(self):
+        self.api_key = os.environ.get("API_KEY")  # Aldrig hårdkoda
+        self.rate_limit = {}
+
+    def sanitize(self, input):
+        # Ta bort farliga tecken
+        dangerous = ["<script>", "DROP TABLE", "../", "eval("]
+        for d in dangerous:
+            input = input.replace(d, "")
+        return input.strip()[:10000]  # Max längd
+
+    def rate_check(self, user_id, limit=10):
+        count = self.rate_limit.get(user_id, 0)
+        if count >= limit:
+            raise Exception("Rate limit")
+        self.rate_limit[user_id] = count + 1
+        return True
+
+    def hash_sensitive(self, data):
+        # Hasha känslig data innan loggning
+        return hashlib.sha256(data.encode()).hexdigest()[:16]
+
+    def process(self, user_id, input):
+        self.rate_check(user_id)
+        clean = self.sanitize(input)
+        # Processa via Tor...
+        return self._call_via_tor(clean)
+```
+
+### Env
+```bash
+# .env (ALDRIG committa)
+API_KEY=xxx
+TOR_SOCKS=socks5://127.0.0.1:9050
+
+# .gitignore
+.env
+*.key
+*.pem
+credentials/
+```
+
+### Principer
+| Regel | Varför |
+|-------|--------|
+| Aldrig logga input | Privacy |
+| Tor för alla requests | Anonymitet |
+| Sanitera allt | Injection-skydd |
+| Rate limit | DoS-skydd |
+| Env vars för secrets | Läcker inte i kod |
+
+---
+
 ## Offline Mode
 
 Helt lokal, ingen internet.
