@@ -253,17 +253,53 @@ sudo cat /var/lib/tor/hidden_service/hostname
 
 ---
 
-## Three Apes (Privacy Layer)
+## Three Apes (Privacy Layer + Memory)
 
-Direkt Tor-routing för all trafik. Ingen VPN-abstraktion.
+Direkt Tor-routing för all trafik. Varje apa har eget minne.
 
-| Lager | Funktion |
-|-------|----------|
-| **Ape 1** | Entry guard - första Tor-nod |
-| **Ape 2** | Middle relay - anonymisering |
-| **Ape 3** | Exit node - ut till internet |
+| Apa | Funktion | Minne |
+|-----|----------|-------|
+| **Ape 1 (See)** | Entry guard - tar emot input | Kort minne - session context |
+| **Ape 2 (Think)** | Middle relay - processar | Arbetsminne - reasoning state |
+| **Ape 3 (Act)** | Exit node - levererar output | Långt minne - persistent storage |
 
-All bot-kommunikation går genom Tor-kretsen.
+### Implementation
+```python
+class ThreeApes:
+    def __init__(self):
+        # Ape 1: See - session memory
+        self.see_memory = []
+
+        # Ape 2: Think - working memory
+        self.think_memory = {}
+
+        # Ape 3: Act - long-term memory
+        self.act_memory = VectorStore()  # ChromaDB/FAISS
+
+    def see(self, input):
+        """Ape 1: Ta emot och kontextualisera"""
+        self.see_memory.append(input)
+        return self._contextualize(input)
+
+    def think(self, context):
+        """Ape 2: Processa och resonera"""
+        self.think_memory['current'] = context
+        return self._reason(context)
+
+    def act(self, result):
+        """Ape 3: Agera och spara"""
+        self.act_memory.store(result)
+        return self._output(result)
+
+    def process(self, input):
+        """Full pipeline genom alla apor"""
+        seen = self.see(input)
+        thought = self.think(seen)
+        action = self.act(thought)
+        return action
+```
+
+All bot-kommunikation går genom Tor-kretsen + memory chain.
 
 ---
 
