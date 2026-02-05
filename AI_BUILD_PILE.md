@@ -255,13 +255,58 @@ sudo cat /var/lib/tor/hidden_service/hostname
 
 ## Three Apes (Privacy Layer + Memory)
 
-Direkt Tor-routing för all trafik. Varje apa har eget minne.
+**Som Orbot, men 3x bättre.** Tre lager istället för ett.
 
-| Apa | Funktion | Minne |
-|-----|----------|-------|
-| **Ape 1 (See)** | Entry guard - tar emot input | Kort minne - session context |
-| **Ape 2 (Think)** | Middle relay - processar | Arbetsminne - reasoning state |
-| **Ape 3 (Act)** | Exit node - levererar output | Långt minne - persistent storage |
+---
+
+### Ape 1: SEE (Entry)
+```
+┌─────────────────────────────┐
+│  VPN Tunnel In              │
+│  - Tar emot all trafik      │
+│  - Krypterar första lagret  │
+│  - Session memory           │
+└─────────────────────────────┘
+```
+**Minne:** Kort (session context)
+**Roll:** Entry guard, första krypteringen
+
+---
+
+### Ape 2: THINK (Middle)
+```
+┌─────────────────────────────┐
+│  Tor Relay                  │
+│  - Anonymiserar             │
+│  - Processar requests       │
+│  - Working memory           │
+└─────────────────────────────┘
+```
+**Minne:** Arbetsminne (reasoning state)
+**Roll:** Anonymisering, processning
+
+---
+
+### Ape 3: ACT (Exit)
+```
+┌─────────────────────────────┐
+│  Clean Exit                 │
+│  - Levererar output         │
+│  - Persistent storage       │
+│  - Ingen trace              │
+└─────────────────────────────┘
+```
+**Minne:** Långt (persistent, encrypted)
+**Roll:** Exit node, ren output
+
+---
+
+### Full Pipeline
+```
+User → [Ape1:VPN] → [Ape2:Tor] → [Ape3:Exit] → Internet
+                                      ↓
+                              Clean response
+```
 
 ### Implementation
 ```python
