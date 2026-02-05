@@ -198,9 +198,78 @@ m -j$(nproc)
 
 ---
 
+## Tor Integration (Direkt)
+
+### Installation
+```bash
+# Linux
+sudo apt install tor
+sudo systemctl enable --now tor
+
+# Verify
+curl --socks5 127.0.0.1:9050 https://check.torproject.org/api/ip
+```
+
+### Python via Tor
+```python
+import requests
+
+proxies = {
+    'http': 'socks5h://127.0.0.1:9050',
+    'https': 'socks5h://127.0.0.1:9050'
+}
+
+# All requests via Tor
+response = requests.get("https://api.example.com", proxies=proxies)
+```
+
+### OpenAI/LLM via Tor
+```python
+import httpx
+from openai import OpenAI
+
+# Custom transport via Tor
+transport = httpx.HTTPTransport(proxy="socks5://127.0.0.1:9050")
+http_client = httpx.Client(transport=transport)
+
+client = OpenAI(
+    api_key="din-nyckel",
+    http_client=http_client
+)
+```
+
+### Tor Hidden Service (egen .onion)
+```bash
+# /etc/tor/torrc
+HiddenServiceDir /var/lib/tor/hidden_service/
+HiddenServicePort 80 127.0.0.1:8080
+
+# Starta om
+sudo systemctl restart tor
+
+# Hämta .onion adress
+sudo cat /var/lib/tor/hidden_service/hostname
+```
+
+---
+
+## Three Apes (Privacy Layer)
+
+Direkt Tor-routing för all trafik. Ingen VPN-abstraktion.
+
+| Lager | Funktion |
+|-------|----------|
+| **Ape 1** | Entry guard - första Tor-nod |
+| **Ape 2** | Middle relay - anonymisering |
+| **Ape 3** | Exit node - ut till internet |
+
+All bot-kommunikation går genom Tor-kretsen.
+
+---
+
 ## TODO: Roberto Docs
 
-- [ ] Three Apes koncept - definiera
+- [x] Three Apes koncept - Tor-lager
 - [ ] Burnouts logik - implementera
 - [ ] Memory sequential thinking - bygga
 - [ ] AOSP/GrapheneOS integration
