@@ -913,15 +913,259 @@ class LidlStore:
 
 ---
 
+## Three Burnouts (Error Handling)
+
+**Retry → Fallback → Fail Safe.** Tre chanser. Alltid.
+
+```
+┌─────────────────────────────────────────────┐
+│            THREE BURNOUTS                   │
+├─────────────────────────────────────────────┤
+│  BURNOUT 1: RETRY                           │
+│  - Försök igen (3x)                         │
+│  - Exponential backoff                      │
+│  - Same method                              │
+├─────────────────────────────────────────────┤
+│  BURNOUT 2: FALLBACK                        │
+│  - Byt metod                                │
+│  - API → Local, Cloud → Disk                │
+│  - Degraded mode ok                         │
+├─────────────────────────────────────────────┤
+│  BURNOUT 3: FAIL SAFE                       │
+│  - Kontrollerat stopp                       │
+│  - Spara state                              │
+│  - Alert + log                              │
+└─────────────────────────────────────────────┘
+```
+
+```python
+import time
+import logging
+
+class ThreeBurnouts:
+    def __init__(self, max_retries=3):
+        self.max_retries = max_retries
+
+    def retry(self, func, *args):
+        """Burnout 1: Försök igen"""
+        for i in range(self.max_retries):
+            try:
+                return func(*args)
+            except Exception as e:
+                wait = 2 ** i  # 1s, 2s, 4s
+                logging.warning(f"Retry {i+1}/{self.max_retries} - wait {wait}s: {e}")
+                time.sleep(wait)
+        return None
+
+    def fallback(self, primary, secondary, *args):
+        """Burnout 2: Byt metod"""
+        result = self.retry(primary, *args)
+        if result is None:
+            logging.warning("Primary failed, falling back...")
+            result = self.retry(secondary, *args)
+        return result
+
+    def fail_safe(self, func, state, *args):
+        """Burnout 3: Kontrollerat stopp"""
+        result = self.fallback(func, self._safe_mode, *args)
+        if result is None:
+            self._save_state(state)
+            self._alert("All burnouts exhausted")
+            return {"status": "failed", "state_saved": True}
+        return result
+
+    def _safe_mode(self, *args):
+        """Minimal fallback - alltid funkar"""
+        return {"status": "degraded", "message": "Running in safe mode"}
+
+    def _save_state(self, state):
+        import json
+        with open("burnout_state.json", "w") as f:
+            json.dump(state, f)
+
+    def _alert(self, msg):
+        logging.critical(f"BURNOUT ALERT: {msg}")
+
+# Användning
+burnouts = ThreeBurnouts()
+
+def get_response(query):
+    return burnouts.fail_safe(
+        primary_llm,           # Burnout 1: Retry primary
+        fallback_llm,          # Burnout 2: Switch to local
+        current_state,         # Burnout 3: Save & alert
+        query
+    )
+```
+
+---
+
+## AOSP / GrapheneOS Integration
+
+Koppla Roberto till Android-bygget.
+
+### Vad den gör
+| Funktion | Beskrivning |
+|----------|-------------|
+| **Fetch** | Hämta AOSP/GrapheneOS källkod |
+| **Patch** | Applicera anpassningar |
+| **Build** | Kompilera automatiskt |
+| **Flash** | Deploya till enhet |
+
+### Integration
+```python
+import subprocess
+import os
+
+class AOSPIntegration:
+    def __init__(self, work_dir="/opt/aosp"):
+        self.work_dir = work_dir
+        self.burnouts = ThreeBurnouts()
+
+    def fetch(self, branch="14"):
+        """Hämta GrapheneOS source"""
+        cmds = [
+            ["repo", "init", "-u",
+             "https://github.com/GrapheneOS/platform_manifest.git",
+             "-b", branch],
+            ["repo", "sync", "-j8", "--force-sync"]
+        ]
+        for cmd in cmds:
+            result = subprocess.run(cmd, cwd=self.work_dir, capture_output=True)
+            if result.returncode != 0:
+                raise RuntimeError(result.stderr.decode())
+
+    def build(self, target="aosp_arm64-userdebug"):
+        """Bygg med max CPU"""
+        env = os.environ.copy()
+        script = f"""
+        source build/envsetup.sh
+        lunch {target}
+        m -j$(nproc)
+        """
+        subprocess.run(["bash", "-c", script], cwd=self.work_dir, env=env)
+
+    def apply_patch(self, patch_file):
+        """Applicera Roberto-patch"""
+        subprocess.run(["git", "apply", patch_file], cwd=self.work_dir)
+
+    def get_build_info(self):
+        """Hämta build metadata"""
+        out = os.path.join(self.work_dir, "out/target/product")
+        builds = os.listdir(out) if os.path.exists(out) else []
+        return {"builds": builds, "work_dir": self.work_dir}
+```
+
+### Build Pipeline
+```bash
+# Kör som bakgrundsjobb
+nohup python3 -c "
+from roberto import AOSPIntegration
+a = AOSPIntegration()
+a.fetch()
+a.build()
+" > build.log 2>&1 &
+
+# Övervaka
+tail -f build.log
+```
+
+---
+
+## App Framework Setup
+
+Roberto som app-plattform.
+
+### Stack
+```
+┌─────────────────────────────────────────────┐
+│             APP FRAMEWORK                   │
+├─────────────────────────────────────────────┤
+│  FastAPI    → REST API backend              │
+│  Gradio     → Snabbt UI för AI             │
+│  WebSocket  → Real-time kommunikation       │
+│  SQLite     → Lokal state                  │
+└─────────────────────────────────────────────┘
+```
+
+### Installation
+```bash
+pip install fastapi uvicorn gradio websockets
+```
+
+### API Backend
+```python
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI(title="Roberto")
+
+class Query(BaseModel):
+    text: str
+    mode: str = "zen"  # zen | master
+
+@app.post("/ask")
+async def ask(q: Query):
+    bot = RobertoBot()
+    bot.set_mode(q.mode)
+    return {"response": bot.respond(q.text)}
+
+@app.get("/status")
+async def status():
+    return {"status": "online", "mode": "local"}
+
+# Starta
+# uvicorn main:app --host 0.0.0.0 --port 8000
+```
+
+### Gradio UI
+```python
+import gradio as gr
+
+def respond(message, mode):
+    bot = RobertoBot()
+    bot.set_mode(mode)
+    return bot.respond(message)
+
+demo = gr.Interface(
+    fn=respond,
+    inputs=[
+        gr.Textbox(label="Fråga"),
+        gr.Radio(["zen", "master"], label="Mode", value="zen")
+    ],
+    outputs=gr.Textbox(label="Svar"),
+    title="Roberto",
+    description="Clean coding machine"
+)
+
+demo.launch(server_name="0.0.0.0", server_port=7860)
+```
+
+### WebSocket (Real-time)
+```python
+from fastapi import WebSocket
+
+@app.websocket("/ws")
+async def ws_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    bot = RobertoBot()
+    while True:
+        data = await websocket.receive_text()
+        response = bot.respond(data)
+        await websocket.send_text(response)
+```
+
+---
+
 ## TODO: Roberto Docs
 
 - [x] Three Apes koncept - Tor-lager
 - [x] Bot modes - Zen + Master
 - [x] Constructor Thinking - sequential memory
 - [x] The Store (Lidl Style) - budget tracking
-- [ ] Burnouts logik - implementera
-- [ ] AOSP/GrapheneOS integration
-- [ ] App framework setup
+- [x] Burnouts logik - implementera
+- [x] AOSP/GrapheneOS integration
+- [x] App framework setup
 
 ---
 
